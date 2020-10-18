@@ -8,79 +8,63 @@ namespace Test.Algorithm
     {
         static void Main(string[] args)
         {
-            int[] arr = new int[] { 1, 2, 3, 5 };
-            //int[] arr = new int[] { 3,1,2};
-            var res = solveEfficient(arr, 5);
+            int[] arr = new int[] { 1, 3, 2};
+            var res = solveEfficient(arr, 4);
             Console.ReadKey();
         }
 
-        public static List<Tuple<int, int>> solveEfficient(int[] arr, int targetSum)
+        public static List<List<int>> solveEfficient(int[] arr, int targetSum)
         {
-            List<Tuple<int, int>> lst = new List<Tuple<int, int>>();
-            List<List<int>> lst2 = new List<List<int>>();
-            Dictionary<int, int> tempList = new Dictionary<int, int>();
-            int start = 0, end = 0;
-
-            int currentSum = 0;
-
-            while (start < arr.Length && end <= arr.Length)
+            List<List<int>> finalList = new List<List<int>>();
+            try
             {
-                if (currentSum == targetSum)
+                Dictionary<int, int> tempList = new Dictionary<int, int>();
+                int startIndex = 0, endIndex = 0;
+                int currentSum = 0;
+
+                while (startIndex < arr.Length && endIndex <= arr.Length)
                 {
-
-                    /* as the currSum is equal to target sum, print the 
-					 * result with end as end-1.
-					 *  because when we added the element at end we
-					 *  increased the pointer there only,
-					 *  so now we need to subtract 1 because the 
-					 *  subarray constituting that sum has
-					 *   its last pointer one index where end is currently at.
-					 */
-
-                    lst.Add(new Tuple<int, int>(start, end - 1));
-                    lst2.Add(tempList.Select(x=> x.Value).ToList());
-                    tempList = new Dictionary<int, int>();
-                    Console.WriteLine("starting index : " + start + ", " +
-                            "Ending index : " + (end - 1));
-                    if (end <= arr.Length - 1)
+                    if (currentSum == targetSum)
                     {
-                        tempList.Add(end, arr[end]);
-                        currentSum += arr[end];
+                        finalList.Add(tempList.Select(x => x.Value).ToList());
+                        tempList = new Dictionary<int, int>();
+                        Console.WriteLine("starting index : " + startIndex + ", " +
+                                "Ending index : " + (endIndex - 1));
+                        if (endIndex <= arr.Length - 1)
+                        {
+                            tempList.Add(endIndex, arr[endIndex]);
+                            currentSum += arr[endIndex];
+                        }
+                        endIndex++;
                     }
-                    end++;
 
-                }
-
-                else
-                {
-                    /* if the currSum becomes more than required, 
-					 * we keep on subtracting the start element
-					 * until it is less than or equal to 
-					 required target sum. */
-                    if (currentSum > targetSum)
-                    {
-                        currentSum -= arr[start];
-                        tempList.Remove(start);
-                        start++;
-                    }
                     else
                     {
-                        /* we add the last element to our
-						 * currSum until our 
-						 * sum becomes greater than or
-						 * equal to target sum.
-						 */
-                        if (end <= arr.Length - 1)
+                        if (currentSum > targetSum)
                         {
-                            tempList.Add(end, arr[end]);
-                            currentSum += tempList[end];
+                            currentSum -= arr[startIndex];
+                            tempList.Remove(startIndex);
+                            startIndex++;
                         }
-                        end++;
+                        else
+                        {
+                            if (endIndex <= arr.Length - 1)
+                            {
+                                tempList.Add(endIndex, arr[endIndex]);
+                                currentSum += tempList[endIndex];
+                            }
+                            endIndex++;
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
 
-            return lst;
+                throw;
+            }
+
+            return finalList;
         }
 
         private static int subarraySum(int[] arr)
