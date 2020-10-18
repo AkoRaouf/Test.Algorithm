@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Test.Algorithm
 {
@@ -16,7 +17,7 @@ namespace Test.Algorithm
         public static List<Tuple<int, int>> solveEfficient(int[] arr, int targetSum)
         {
             List<Tuple<int, int>> lst = new List<Tuple<int, int>>();
-            List<List<int>> lst2 = new List<Tuple<int, int>>();
+            List<List<int>> lst2 = new List<List<int>>();
             Dictionary<int, int> tempList = new Dictionary<int, int>();
             int start = 0, end = 0;
 
@@ -37,11 +38,13 @@ namespace Test.Algorithm
 					 */
 
                     lst.Add(new Tuple<int, int>(start, end - 1));
-
+                    lst2.Add(tempList.Select(x=> x.Value).ToList());
+                    tempList = new Dictionary<int, int>();
                     Console.WriteLine("starting index : " + start + ", " +
                             "Ending index : " + (end - 1));
                     if (end <= arr.Length - 1)
                     {
+                        tempList.Add(end, arr[end]);
                         currentSum += arr[end];
                     }
                     end++;
@@ -56,8 +59,8 @@ namespace Test.Algorithm
 					 required target sum. */
                     if (currentSum > targetSum)
                     {
-                        tempList.Add(start, arr[start]);
-                        currentSum -= tempList[start];
+                        currentSum -= arr[start];
+                        tempList.Remove(start);
                         start++;
                     }
                     else
